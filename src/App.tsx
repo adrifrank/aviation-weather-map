@@ -1,12 +1,13 @@
-import { Typography, Container } from '@mui/material';
+import { Box } from '@mui/material';
+import { Map } from '@/components/Map';
 
 function App() {
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Aviation Weather Map
-      </Typography>
-    </Container>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <Box component="main" sx={{ flexGrow: 1 }}>
+        <Map />
+      </Box>
+    </Box>
   );
 }
 
