@@ -1,30 +1,26 @@
-import { useRef, useEffect } from 'react';
-import maplibregl from 'maplibre-gl';
+import { useRef } from 'react';
 import { Box } from '@mui/material';
+import type { FeatureCollection } from 'geojson';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { MAPTILER_API_KEY } from '@/config';
+import {
+  useMapInitialization,
+  useMapLayers,
+  useMapInteractivity,
+} from '@/hooks';
 
-export const Map = () => {
+interface MapProps {
+  sigmetData: FeatureCollection | null;
+  airsigmetData: FeatureCollection | null;
+}
+
+export const Map = ({ sigmetData, airsigmetData }: MapProps) => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
-  const map = useRef<maplibregl.Map | null>(null);
+  const { mapRef, isMapLoaded } = useMapInitialization(mapContainer);
 
-  useEffect(() => {
-    if (map.current || !mapContainer.current) return;
-
-    map.current = new maplibregl.Map({
-      container: mapContainer.current,
-      style: `https://api.maptiler.com/maps/streets/style.json?key=${MAPTILER_API_KEY}`,
-      center: [0, 0],
-      zoom: 2,
-    });
-
-    return () => {
-      map.current?.remove();
-      map.current = null;
-    };
-  }, []);
+  useMapLayers(mapRef, isMapLoaded, sigmetData, airsigmetData);
+  useMapInteractivity(mapRef, isMapLoaded);
 
   return <Box ref={mapContainer} sx={{ width: '100%', height: '100vh' }} />;
 };
