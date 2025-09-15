@@ -1,8 +1,40 @@
 import type { GeoJsonProperties } from 'geojson';
+import { formatDate } from './commonUtils';
 
-const formatAltitude = (minFt?: number, maxFt?: number): string => {
-  if (!minFt && !maxFt) return 'Unknown';
-  return `${minFt || 0} - ${maxFt || 'Above'} ft`;
+const formatAltitude = (
+  properties: GeoJsonProperties,
+  type: 'SIGMET' | 'AIRSIGMET',
+): string => {
+  if (!properties) return 'Unknown';
+
+  if (type === 'SIGMET') {
+    const base = properties.base;
+    const top = properties.top;
+
+    if (base !== undefined && top !== undefined) {
+      return `${base} ft - ${top} ft`;
+    }
+
+    if (top !== undefined) {
+      return `${top} ft`;
+    }
+  } else {
+    const alt1 = properties.altitudeHi1;
+    const alt2 = properties.altitudeHi2;
+
+    if (alt1 !== undefined && alt2 !== undefined && alt1 !== alt2) {
+      const minAlt = Math.min(alt1, alt2);
+      const maxAlt = Math.max(alt1, alt2);
+      return `${minAlt} ft - ${maxAlt} ft`;
+    }
+
+    const altitude = alt1 || alt2;
+    if (altitude !== undefined) {
+      return `${altitude} ft`;
+    }
+  }
+
+  return 'Unknown';
 };
 
 export const createPopupMarkup = (
@@ -12,9 +44,11 @@ export const createPopupMarkup = (
   if (!properties) return '';
 
   const color = popupType === 'SIGMET' ? '#d9534f' : '#428bca';
-  const altitude = formatAltitude(properties.minFt, properties.maxFt);
-  const validFrom = new Date(properties.validTimeFrom).toLocaleString();
-  const validTo = new Date(properties.validTimeTo).toLocaleString();
+  const altitude = formatAltitude(properties, popupType);
+  const validFrom = formatDate(properties.validTimeFrom);
+  const validTo = formatDate(properties.validTimeTo);
+  const rawText =
+    properties.rawSigmet || properties.rawAirSigmet || 'No raw text';
 
   return `
     <style>
@@ -70,7 +104,7 @@ export const createPopupMarkup = (
         <p><strong>Valid To:</strong> ${validTo}</p>
         <div class="raw-text-container">
             <strong>Raw Text:</strong>
-            <pre>${properties.rawSigmet || 'No raw text'}</pre>
+            <pre>${rawText}</pre>
         </div>
     </div>
 `;
