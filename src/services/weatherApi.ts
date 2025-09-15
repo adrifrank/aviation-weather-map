@@ -8,9 +8,7 @@ const apiClient = axios.create({
 
 export const getSigmetData = async (): Promise<FeatureCollection> => {
   try {
-    const response = await apiClient.get<FeatureCollection>('/isigmet', {
-      params: { format: 'geojson' },
-    });
+    const response = await apiClient.get<FeatureCollection>('/isigmet');
     return response.data;
   } catch (error) {
     console.error('Error fetching SIGMET data:', error);
@@ -20,9 +18,7 @@ export const getSigmetData = async (): Promise<FeatureCollection> => {
 
 export const getAirsigmetData = async (): Promise<FeatureCollection> => {
   try {
-    const response = await apiClient.get<FeatureCollection>('/airsigmet', {
-      params: { format: 'geojson' },
-    });
+    const response = await apiClient.get<FeatureCollection>('/airsigmet');
     return response.data;
   } catch (error) {
     console.error('Error fetching AIRSIGMET data:', error);
