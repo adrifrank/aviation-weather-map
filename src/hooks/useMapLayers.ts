@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import type { Map as MaplibreMap, GeoJSONSource } from 'maplibre-gl';
 import type { FeatureCollection } from 'geojson';
+import { COLORS } from '@/styles/themeConstants';
 
 const addOrUpdateLayer = (
   map: MaplibreMap,
@@ -35,9 +36,8 @@ export const useMapLayers = (
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !isMapLoaded || !sigmetData || !airsigmetData) return;
-
-    addOrUpdateLayer(map, 'sigmet', sigmetData, '#d9534f');
-    addOrUpdateLayer(map, 'airsigmet', airsigmetData, '#428bca');
-
+    
+    addOrUpdateLayer(map, 'sigmet', sigmetData, COLORS.SIGMET);
+    addOrUpdateLayer(map, 'airsigmet', airsigmetData, COLORS.AIRSIGMET);
   }, [mapRef, isMapLoaded, sigmetData, airsigmetData]);
 };

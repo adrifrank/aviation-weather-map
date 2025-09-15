@@ -1,5 +1,6 @@
 import type { GeoJsonProperties } from 'geojson';
 import { formatDate } from './commonUtils';
+import { COLORS } from '@/styles/themeConstants';
 
 const formatAltitude = (
   properties: GeoJsonProperties,
@@ -43,7 +44,7 @@ export const createPopupMarkup = (
 ): string => {
   if (!properties) return '';
 
-  const color = popupType === 'SIGMET' ? '#d9534f' : '#428bca';
+  const color = popupType === 'SIGMET' ? COLORS.SIGMET : COLORS.AIRSIGMET;
   const altitude = formatAltitude(properties, popupType);
   const validFrom = formatDate(properties.validTimeFrom);
   const validTo = formatDate(properties.validTimeTo);
