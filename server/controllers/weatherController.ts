@@ -1,45 +1,19 @@
-import axios from 'axios';
-import type { Request, Response } from 'express';
-import type { FeatureCollection } from 'geojson';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import { fetchWeatherData } from '../services/weatherService.js';
+import { setToCache } from '../services/cacheService.js';
 
-const AWC_API_BASE_URL = 'https://aviationweather.gov/api/data';
+export const getSigmet = asyncHandler(async (req, res) => {
+  const sigmetData = await fetchWeatherData('isigmet');
 
-export const getSigmet = async (req: Request, res: Response) => {
-  try {
-    const response = await axios.get<FeatureCollection>(`${AWC_API_BASE_URL}/isigmet`, {
-      params: { format: 'geojson' },
-    });
+  setToCache(req.path, sigmetData);
 
-    const { cache } = res.locals;
-    const dataToCache = {
-      data: response.data,
-      timestamp: Date.now(),
-    };
-    cache.set(req.path, dataToCache);
+  res.json(sigmetData);
+});
 
-    res.json(response.data);
-  } catch (error) {
-    console.error(`Error fetching SIGMET data:`, (error as Error).message);
-    res.status(500).json({ message: `Error fetching SIGMET data` });
-  }
-};
+export const getAirsigmet = asyncHandler(async (req, res) => {
+  const airsigmetData = await fetchWeatherData('airsigmet');
 
-export const getAirsigmet = async (req: Request, res: Response) => {
-  try {
-    const response = await axios.get<FeatureCollection>(`${AWC_API_BASE_URL}/airsigmet`, {
-      params: { format: 'geojson' },
-    });
+  setToCache(req.path, airsigmetData);
 
-    const { cache } = res.locals;
-    const dataToCache = {
-      data: response.data,
-      timestamp: Date.now(),
-    };
-    cache.set(req.path, dataToCache);
-
-    res.json(response.data);
-  } catch (error) {
-    console.error(`Error fetching AIRSIGMET data:`, (error as Error).message);
-    res.status(500).json({ message: `Error fetching AIRSIGMET data` });
-  }
-};
+  res.json(airsigmetData);
+});

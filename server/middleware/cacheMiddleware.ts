@@ -1,12 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import type { FeatureCollection } from 'geojson';
-
-interface CacheEntry {
-  data: FeatureCollection;
-  timestamp: number;
-}
-
-const cache = new Map<string, CacheEntry>();
+import { getFromCache } from '../services/cacheService.js';
 
 export const cacheMiddleware = (
   req: Request,
@@ -14,14 +7,13 @@ export const cacheMiddleware = (
   next: NextFunction,
 ) => {
   const key = req.path;
-  const cachedData = cache.get(key);
+  const cachedData = getFromCache(key);
 
-  if (cachedData && Date.now() - cachedData.timestamp < 3600000) {
+  if (cachedData) {
     console.log(`[Cache] HIT for ${key}`);
-    return res.json(cachedData.data);
+    return res.json(cachedData);
   }
 
   console.log(`[Cache] MISS for ${key}`);
-  res.locals.cache = cache;
   next();
 };

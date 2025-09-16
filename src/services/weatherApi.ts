@@ -1,10 +1,5 @@
-import axios from 'axios';
-import { AWC_API_BASE_URL } from '@/config';
 import type { FeatureCollection } from 'geojson';
-
-const apiClient = axios.create({
-  baseURL: AWC_API_BASE_URL,
-});
+import apiClient from './apiClient';
 
 export const getSigmetData = async (): Promise<FeatureCollection> => {
   try {
