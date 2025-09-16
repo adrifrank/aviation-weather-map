@@ -1,69 +1,101 @@
-# React + TypeScript + Vite
+# Aviation Weather Map
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application that displays real-time aviation weather warnings (SIGMET/AIRSIGMET) on an interactive map with advanced filtering capabilities. This project features a modern frontend built with TypeScript and Vite, and a backend proxy server with in-memory caching to handle API requests.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Interactive Map:** Smooth, zoomable map powered by MapLibre GL JS.
+- **Real-Time Data:** Displays up-to-date SIGMET and AIRSIGMET data from the Aviation Weather Center (AWC) API.
+- **Detailed Popups:** Click on any weather advisory to see detailed information, including hazard type, altitude, valid time, and raw text.
+- **Advanced Filtering:**
+  - Toggle visibility for SIGMET and AIRSIGMET layers.
+  - Filter advisories by a specific altitude range using a slider.
+- **Backend Proxy with Caching:** A lightweight Express.js server proxies API requests to avoid CORS issues and caches responses for 1 hour to improve performance.
+- **Clean Architecture:** The codebase is well-structured with a clear separation of concerns, using custom React hooks, utility functions, and a typed codebase with TypeScript.
+- **Unit Tested:** Key components and logic are covered by unit tests using Jest and React Testing Library.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend:** React, TypeScript, Vite, MapLibre GL JS, Material-UI (MUI), Axios
+- **Backend:** Node.js, Express.js, TypeScript
+- **Testing:** Jest, React Testing Library
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+Follow these instructions to get the project up and running on your local machine.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+### Prerequisites
+
+- Node.js (v18 or later recommended)
+- npm (or yarn/pnpm)
+
+### Installation & Setup
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/adrifrank/aviation-weather-map.git
+    cd aviation-weather-map
+    ```
+
+2.  **Install all dependencies:**
+    This single command will install dependencies for both the client and the server.
+
+    ```bash
+    npm run install:all
+    ```
+
+3.  **Set up Environment Variables:**
+    The application requires an API key from MapTiler to display the map tiles.
+    - Go to [MapTiler Cloud](https://www.maptiler.com/cloud/) and create a free account.
+    - Find your API key in your account dashboard.
+    - In the root of the project, create a new file named `.env.local` by copying the example file:
+      ```bash
+      cp .env.example .env.local
+      ```
+    - Open the newly created `.env.local` file and paste your API key:
+
+      ```
+      VITE_MAPTILER_API_KEY="YOUR_MAPTILER_API_KEY_HERE"
+
+      ```
+
+### Running the Application
+
+#### Development Mode
+
+To run in development mode, open **two separate terminals**:
+
+1. Backend Server
+
+```bash
+npm run dev:server
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+You should see: `Proxy server is running on port 3001`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+2. Frontend Client
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm run dev:client
 ```
+
+Application will be available at: `http://localhost:5173`
+
+> **Note:** Both terminals must remain open during development.
+
+#### Production Mode
+
+```bash
+npm run build    # Build the project
+npm run start    # Start the server
+```
+
+## All available Scripts
+
+- `npm run dev:client`: Starts the development server for client and server.
+- `npm run dev:server`: Starts the development server for server.
+- `npm run build`: Creates an optimized production build for both client and server.
+- `npm run start`: Runs the production server (after building).
+- `npm test`: Runs all unit tests for the frontend application.
+- `npm run lint`: Lints the frontend codebase.
