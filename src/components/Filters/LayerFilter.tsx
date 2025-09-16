@@ -31,10 +31,18 @@ export const LayerFilter = ({
           '& .MuiToggleButtonGroup-grouped': { border: 'none' },
         }}
       >
-        <StyledToggleButton value="sigmet" selectedColor={COLORS.SIGMET}>
+        <StyledToggleButton
+          value="sigmet"
+          selectedColor={COLORS.SIGMET}
+          data-testid="layer-toggle-sigmet"
+        >
           SIGMET
         </StyledToggleButton>
-        <StyledToggleButton value="airsigmet" selectedColor={COLORS.AIRSIGMET}>
+        <StyledToggleButton
+          value="airsigmet"
+          selectedColor={COLORS.AIRSIGMET}
+          data-testid="layer-toggle-airsigmet"
+        >
           AIRSIGMET
         </StyledToggleButton>
       </ToggleButtonGroup>

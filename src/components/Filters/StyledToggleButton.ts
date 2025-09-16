@@ -4,7 +4,9 @@ export interface StyledToggleButtonProps extends ToggleButtonProps {
   selectedColor: string;
 }
 
-export const StyledToggleButton = styled(ToggleButton)<StyledToggleButtonProps>(
+export const StyledToggleButton = styled(ToggleButton, {
+  shouldForwardProp: (prop) => prop !== 'selectedColor',
+})<StyledToggleButtonProps>(
   ({ theme, selectedColor }) => ({
     textTransform: 'none',
     fontWeight: 500,

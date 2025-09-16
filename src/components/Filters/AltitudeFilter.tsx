@@ -34,6 +34,7 @@ export const AltitudeFilter = ({
           max={48000}
           step={1000}
           disableSwap
+          data-testid="altitude-slider-container"
         />
       </Box>
     </Box>
